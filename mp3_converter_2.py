@@ -3,6 +3,7 @@ import asyncio
 import edge_tts
 import fitz  # PyMuPDF
 import logging
+from langchain.docstore.document import Document
 
 folder_path = "./static"
 filename = "lettura_completa.mp3"
@@ -53,6 +54,8 @@ async def generate_full_audio(text, filename):
 if __name__ == "__main__":
     pdf_texts = extract_text_from_pdfs(folder_path)
     txt_texts = extract_text_from_txts(folder_path)
+    pdf_docs = [Document(page_content=text, metadata={"source": "pdf"}) for text in pdf_texts]
+    txt_docs = [Document(page_content=text, metadata={"source": "txt"}) for text in txt_texts]
 
     if len(pdf_texts) != 0:
         testo = str(pdf_texts)
