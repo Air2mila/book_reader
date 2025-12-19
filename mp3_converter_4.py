@@ -4,6 +4,12 @@ import edge_tts
 import docx
 import fitz  # PyMuPDF
 
+# === CONFIG ===
+os.environ['http_proxy'] = "http://proxy.dcl.tetrapak.com:8080"
+os.environ['HTTP_PROXY'] = "http://proxy.dcl.tetrapak.com:8080"
+os.environ['https_proxy'] = "http://proxy.dcl.tetrapak.com:8080"
+os.environ['HTTPS_PROXY'] = "http://proxy.dcl.tetrapak.com:8080"
+
 def estrai_testo_da_cartella(percorso_cartella):
     # 1. Cerca il primo file che termina con .pdf nella cartella
     file_pdf = None
@@ -68,18 +74,19 @@ async def generate_full_audio(text, filename):
     await communicate.save(filename)
     print(f"File audio generato con successo in: {filename}")
 
-
+testo = ""
+testo_pdf = ""
+testo_doc = ""
 folder_path = "./static"
 testo_pdf = estrai_testo_da_cartella(folder_path)
-testo_doc = docx_a_stringa_pulita(folder_path)
-
-if len(testo_pdf) != 0:
-    testo = testo_pdf
-elif len(testo_doc) != 0:
-    testo = testo_doc
+if len(testo_pdf) == 0:
+    testo_doc = docx_a_stringa_pulita(folder_path)
+    if len(testo_doc) == 0:
+        print("Nessun files in folder")
+    else:
+        testo = testo_doc
 else:
-    testo = ""
-    print("Nessun files in folder")
+    testo = testo_pdf
 
 filename = "lettura_completa.mp3"
 filepath = os.path.join("./static", filename)
