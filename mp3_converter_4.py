@@ -63,12 +63,19 @@ def docx_a_stringa_pulita(percorso_cartella):
 
     except Exception as e:
         return f"Errore durante la lettura: {e}"
+
 async def generate_full_audio(text, filename):
     # Assicurati che la cartella static esista
     os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     # Inizializza la comunicazione con edge_tts
-    communicate = edge_tts.Communicate(text, "it-IT-GiuseppeNeural")
+    #communicate = edge_tts.Communicate(text, "it-IT-GiuseppeNeural")
+    communicate = edge_tts.Communicate(
+        text,
+        voice="it-IT-ElsaNeural",
+        rate="+0%",
+        pitch="+0Hz"
+    )
 
     # Esegue effettivamente il salvataggio (await è fondamentale)
     await communicate.save(filename)
